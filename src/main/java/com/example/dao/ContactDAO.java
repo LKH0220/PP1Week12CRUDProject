@@ -1,17 +1,16 @@
 package com.example.dao;
 
-import com.example.bean.BoardVO;
+import com.example.bean.ContactVO;
 import com.example.util.JDBCUtil;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class BoardDAO {
+public class ContactDAO {
     Connection conn = null;
     PreparedStatement stmt = null;
     ResultSet rs = null;
@@ -22,8 +21,8 @@ public class BoardDAO {
     private final String CONTACT_GET = "select * from Contacts where ContactID=?";
     private final String CONTACT_LIST = "select * from Contacts order by ContactID desc";
 
-    public int insertBoard(BoardVO vo) {
-        System.out.println("===> JDBC로 insertBoard() 기능 처리");
+    public int insertContact(ContactVO vo) {
+        System.out.println("===> JDBC로 insertContact() 기능 처리");
         try {
             conn = JDBCUtil.getConnection();
             stmt = conn.prepareStatement(CONTACT_INSERT);
@@ -40,20 +39,20 @@ public class BoardDAO {
         return 0;
     }
 
-    public void deleteBoard(BoardVO vo) {
-        System.out.println("===> JDBC로 deleteBoard() 기능 처리");
+    public void deleteContact(int id) {
+        System.out.println("===> JDBC로 deleteContact() 기능 처리");
         try {
             conn = JDBCUtil.getConnection();
             stmt = conn.prepareStatement(CONTACT_DELETE);
-            stmt.setInt(1, vo.getContactID());
+            stmt.setInt(1, id);
             stmt.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public int updateBoard(BoardVO vo) {
-        System.out.println("===> JDBC로 updateBoard() 기능 처리");
+    public int updateContact(ContactVO vo) {
+        System.out.println("===> JDBC로 updateContact() 기능 처리");
         try {
             conn = JDBCUtil.getConnection();
             stmt = conn.prepareStatement(CONTACT_UPDATE);
@@ -73,13 +72,13 @@ public class BoardDAO {
         return 0;
     }
 
-    public BoardVO getBoard(int contactId) {
-        BoardVO one = new BoardVO();
-        System.out.println("===> JDBC로 getBoard() 기능 처리");
+    public ContactVO getContact(int contactID) {
+        ContactVO one = new ContactVO();
+        System.out.println("===> JDBC로 getContact() 기능 처리");
         try {
             conn = JDBCUtil.getConnection();
             stmt = conn.prepareStatement(CONTACT_GET);
-            stmt.setInt(1, contactId);
+            stmt.setInt(1, contactID);
             rs = stmt.executeQuery();
             if (rs.next()) {
                 one.setContactID(rs.getInt("ContactID"));
@@ -97,15 +96,15 @@ public class BoardDAO {
         return one;
     }
 
-    public List<BoardVO> getBoardList() {
-        List<BoardVO> list = new ArrayList<BoardVO>();
-        System.out.println("===> JDBC로 getBoardList() 기능 처리");
+    public List<ContactVO> getContactList() {
+        List<ContactVO> list = new ArrayList<ContactVO>();
+        System.out.println("===> JDBC로 getContactList() 기능 처리");
         try {
             conn = JDBCUtil.getConnection();
             stmt = conn.prepareStatement(CONTACT_LIST);
             rs = stmt.executeQuery();
             while (rs.next()) {
-                BoardVO one = new BoardVO();
+                ContactVO one = new ContactVO();
                 one.setContactID(rs.getInt("ContactID"));
                 one.setImage(rs.getString("Image"));
                 one.setContactName(rs.getString("ContactName"));
@@ -121,5 +120,23 @@ public class BoardDAO {
             e.printStackTrace();
         }
         return list;
+    }
+
+    public String getImageFilename(int contactID) {
+        String filename = null;
+        try {
+            conn = JDBCUtil.getConnection();
+            stmt = conn.prepareStatement(CONTACT_GET);
+            stmt.setInt(1, contactID);
+            rs = stmt.executeQuery();
+            if(rs.next()) {
+                filename = rs.getString("Image");
+            }
+            rs.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println("===> JDBC로 getPhotoFilename() 기능 처리");
+        return filename;
     }
 }

@@ -2,7 +2,7 @@ package com.example.bean;
 
 import java.util.Date;
 
-public class BoardVO {
+public class ContactVO {
     private int contactID;
     private String image;
     private String contactName;

@@ -1,19 +1,18 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="com.example.dao.BoardDAO"%>
-
-<% request.setCharacterEncoding("utf-8"); %>
-
-<jsp:useBean id="u" class="com.example.bean.BoardVO"/>
-<jsp:setProperty property="*" name="u"/>
-
+<%@ page import="com.example.dao.ContactDAO, com.example.FileUpload"%>
+<%@ page import="com.example.bean.ContactVO" %>
 <%
-    BoardDAO boardDAO = new BoardDAO();
-    int i = boardDAO.insertBoard(u);
+    request.setCharacterEncoding("utf-8");
+    ContactDAO contactDAO = new ContactDAO();
+    FileUpload upload = new FileUpload();
+    ContactVO u = upload.uploadImage(request);
+
+    int i = contactDAO.insertContact(u);
     String msg = "데이터 추가 성공 !";
     if(i == 0) msg = "[에러] 데이터 추가 ";
 %>
 
 <script>
     alert('<%=msg%>');
-    location.href='posts.jsp';
+    location.href='contacts.jsp';
 </script>
